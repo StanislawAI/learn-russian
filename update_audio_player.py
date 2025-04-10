@@ -199,11 +199,246 @@ def generate_html(phrases_with_topics, output_dir):
         .reset-button:hover {
             background-color: #c0392b;
         }
+        /* Russian Alphabet section styling */
+        .alphabet-container {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f8f4e9;
+            border-radius: 8px;
+            border: 1px solid #e0d9cc;
+        }
+        .alphabet-title {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        .alphabet-section {
+            margin-bottom: 20px;
+        }
+        .section-title {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+            color: white;
+            font-weight: bold;
+        }
+        .section-title.light-blue {
+            background-color: rgba(135, 206, 235, 0.8);
+        }
+        .section-title.blue {
+            background-color: rgba(25, 25, 255, 0.7);
+        }
+        .section-title.green {
+            background-color: rgba(76, 187, 23, 0.7);
+        }
+        .section-title.gray {
+            background-color: rgba(128, 128, 128, 0.7);
+        }
+        .alphabet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 10px;
+        }
+        .letter-row {
+            display: flex;
+            align-items: center;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        .letter-row.light-blue {
+            background-color: rgba(135, 206, 235, 0.4);
+        }
+        .letter-row.blue {
+            background-color: rgba(25, 25, 255, 0.3);
+        }
+        .letter-row.green {
+            background-color: rgba(144, 238, 144, 0.2);
+        }
+        .letter-row.gray {
+            background-color: rgba(128, 128, 128, 0.2);
+        }
+        .cyrillic-letter {
+            font-size: 1.4em;
+            font-weight: bold;
+            width: 60px;
+            color: #2c3e50;
+        }
+        .pronunciation {
+            color: #7f8c8d;
+        }
     </style>
 </head>
 <body>
     <h1>Russian Audio Phrases</h1>
     <p>Click on the play button to hear each phrase. Toggle the loop button to repeat automatically until stopped.</p>
+
+    <!-- Russian Alphabet Section -->
+    <div class="alphabet-container">
+        <h2 class="alphabet-title">Russian Alphabet (Cyrillic)</h2>
+        
+        <!-- Basic Vowels and Consonants Section -->
+        <div class="alphabet-section">
+            <div class="section-title light-blue">Basic Vowels and Consonants</div>
+            <div class="alphabet-grid">
+                <div class="letter-row light-blue">
+                    <div class="cyrillic-letter">А а</div>
+                    <div class="pronunciation">- a</div>
+                </div>
+                <div class="letter-row light-blue">
+                    <div class="cyrillic-letter">Б б</div>
+                    <div class="pronunciation">- be</div>
+                </div>
+                <div class="letter-row light-blue">
+                    <div class="cyrillic-letter">Д д</div>
+                    <div class="pronunciation">- de</div>
+                </div>
+                <div class="letter-row light-blue">
+                    <div class="cyrillic-letter">И и</div>
+                    <div class="pronunciation">- i</div>
+                </div>
+                <div class="letter-row light-blue">
+                    <div class="cyrillic-letter">К к</div>
+                    <div class="pronunciation">- ka</div>
+                </div>
+                <div class="letter-row light-blue">
+                    <div class="cyrillic-letter">Л л</div>
+                    <div class="pronunciation">- el</div>
+                </div>
+                <div class="letter-row light-blue">
+                    <div class="cyrillic-letter">М м</div>
+                    <div class="pronunciation">- em</div>
+                </div>
+                <div class="letter-row light-blue">
+                    <div class="cyrillic-letter">Н н</div>
+                    <div class="pronunciation">- en</div>
+                </div>
+                <div class="letter-row light-blue">
+                    <div class="cyrillic-letter">О о</div>
+                    <div class="pronunciation">- o</div>
+                </div>
+                <div class="letter-row light-blue">
+                    <div class="cyrillic-letter">П п</div>
+                    <div class="pronunciation">- pe</div>
+                </div>
+                <div class="letter-row light-blue">
+                    <div class="cyrillic-letter">Т т</div>
+                    <div class="pronunciation">- te</div>
+                </div>
+                <div class="letter-row light-blue">
+                    <div class="cyrillic-letter">Ф ф</div>
+                    <div class="pronunciation">- ef</div>
+                </div>
+                <div class="letter-row light-blue">
+                    <div class="cyrillic-letter">Ы ы</div>
+                    <div class="pronunciation">- y</div>
+                </div>
+                <div class="letter-row light-blue">
+                    <div class="cyrillic-letter">Э э</div>
+                    <div class="pronunciation">- e</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Strong Consonants Section -->
+        <div class="alphabet-section">
+            <div class="section-title blue">Strong Consonants</div>
+            <div class="alphabet-grid">
+                <div class="letter-row blue">
+                    <div class="cyrillic-letter">В в</div>
+                    <div class="pronunciation">- we</div>
+                </div>
+                <div class="letter-row blue">
+                    <div class="cyrillic-letter">Р р</div>
+                    <div class="pronunciation">- er</div>
+                </div>
+                <div class="letter-row blue">
+                    <div class="cyrillic-letter">С с</div>
+                    <div class="pronunciation">- es</div>
+                </div>
+                <div class="letter-row blue">
+                    <div class="cyrillic-letter">У у</div>
+                    <div class="pronunciation">- u</div>
+                </div>
+                <div class="letter-row blue">
+                    <div class="cyrillic-letter">Х х</div>
+                    <div class="pronunciation">- ha</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Compound Vowels Section -->
+        <div class="alphabet-section">
+            <div class="section-title green">Compound Vowels</div>
+            <div class="alphabet-grid">
+                <div class="letter-row green">
+                    <div class="cyrillic-letter">Е е</div>
+                    <div class="pronunciation">- je</div>
+                </div>
+                <div class="letter-row green">
+                    <div class="cyrillic-letter">Ё ё</div>
+                    <div class="pronunciation">- jo</div>
+                </div>
+                <div class="letter-row green">
+                    <div class="cyrillic-letter">Ю ю</div>
+                    <div class="pronunciation">- ju</div>
+                </div>
+                <div class="letter-row green">
+                    <div class="cyrillic-letter">Я я</div>
+                    <div class="pronunciation">- ja</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Special Characters Section -->
+        <div class="alphabet-section">
+            <div class="section-title gray">Special Characters</div>
+            <div class="alphabet-grid">
+                <div class="letter-row gray">
+                    <div class="cyrillic-letter">Г г</div>
+                    <div class="pronunciation">- ge</div>
+                </div>
+                <div class="letter-row gray">
+                    <div class="cyrillic-letter">Ж ж</div>
+                    <div class="pronunciation">- že</div>
+                </div>
+                <div class="letter-row gray">
+                    <div class="cyrillic-letter">З з</div>
+                    <div class="pronunciation">- ze</div>
+                </div>
+                <div class="letter-row gray">
+                    <div class="cyrillic-letter">Й й</div>
+                    <div class="pronunciation">- i kratkoje</div>
+                </div>
+                <div class="letter-row gray">
+                    <div class="cyrillic-letter">Ц ц</div>
+                    <div class="pronunciation">- ce</div>
+                </div>
+                <div class="letter-row gray">
+                    <div class="cyrillic-letter">Ч ч</div>
+                    <div class="pronunciation">- cie</div>
+                </div>
+                <div class="letter-row gray">
+                    <div class="cyrillic-letter">Ш ш</div>
+                    <div class="pronunciation">- sza</div>
+                </div>
+                <div class="letter-row gray">
+                    <div class="cyrillic-letter">Щ щ</div>
+                    <div class="pronunciation">- śsia</div>
+                </div>
+                <div class="letter-row gray">
+                    <div class="cyrillic-letter">Ъ ъ</div>
+                    <div class="pronunciation">- twiordyj znak</div>
+                </div>
+                <div class="letter-row gray">
+                    <div class="cyrillic-letter">Ь ь</div>
+                    <div class="pronunciation">- miachkij znak</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="filter-container">
         <div class="filter-title">Filter phrases by topic:</div>

@@ -7,8 +7,6 @@ print(f"Current working directory: {os.getcwd()}")
 
 # List of Russian phrases with topics/lessons
 phrases = [
-
-
     {"text": "Привет!", "translation": "Hello!", "topic": "Greetings"},
     {"text": "Здравствуйте!", "translation": "Hello! (formal)", "topic": "Greetings"},
     {"text": "Доброе утро", "translation": "Good morning", "topic": "Greetings"},
@@ -85,24 +83,52 @@ phrases = [
     {"text": "Это будет справа/слева.", "translation": "It will be on the right/left.", "topic": "Directions"},
     {"text": "Я заблудился.", "translation": "I am lost.", "topic": "Directions"},
     {"text": "Я изучаю русский язык.", "translation": "I am studying Russian language.", "topic": "Language"},
-        {"text": "У меня бронь.", "translation": "I have a reservation.", "topic": "Directions"},
-        {"text": "Я забронировал номер.", "translation": "I booked a room.", "topic": "Directions"},
-        {"text": "На какое имя?", "translation": "Under which name?", "topic": "Greetings"},
-        {"text": "Я хочу забронировать номер.", "translation": "I would like to book a room.", "topic": "Directions"},
-        {"text": "Есть ли у вас свободные номера?", "translation": "Do you have any available rooms?", "topic": "Directions"},
-        {"text": "Где мой номер?", "translation": "Where is my room?", "topic": "Directions"},
-        {"text": "У меня проблемы с Wi-Fi.", "translation": "I have a problem with the Wi-Fi.", "topic": "Directions"},
-        {"text": "Могу я получить ключ от другого номера?", "translation": "Can I get the key to another room?", "topic": "Common Phrases"},
-        {"text": "Я хочу выселиться.", "translation": "I would like to check out.", "topic": "Directions"},
-        {"text": "Сколько я должен заплатить?", "translation": "How much do I owe?", "topic": "Directions"},
-        {"text": "Спасибо за ваше обслуживание.", "translation": "Thank you for your service.", "topic": "Common Phrases"},
+    {"text": "У меня бронь.", "translation": "I have a reservation.", "topic": "Directions"},
+    {"text": "Я забронировал номер.", "translation": "I booked a room.", "topic": "Directions"},
+    {"text": "На какое имя?", "translation": "Under which name?", "topic": "Greetings"},
+    {"text": "Я хочу забронировать номер.", "translation": "I would like to book a room.", "topic": "Directions"},
+    {"text": "Есть ли у вас свободные номера?", "translation": "Do you have any available rooms?", "topic": "Directions"},
+    {"text": "Где мой номер?", "translation": "Where is my room?", "topic": "Directions"},
+    {"text": "У меня проблемы с Wi-Fi.", "translation": "I have a problem with the Wi-Fi.", "topic": "Directions"},
+    {"text": "Могу я получить ключ от другого номера?", "translation": "Can I get the key to another room?", "topic": "Common Phrases"},
+    {"text": "Я хочу выселиться.", "translation": "I would like to check out.", "topic": "Directions"},
+    {"text": "Сколько я должен заплатить?", "translation": "How much do I owe?", "topic": "Directions"},
+    {"text": "Спасибо за ваше обслуживание.", "translation": "Thank you for your service.", "topic": "Common Phrases"},
     {"text": "Сколько это стоит?", "translation": "How much does it cost?", "topic": "Shopping"},
     {"text": "У вас есть другой размер?", "translation": "Do you have another size?", "topic": "Shopping"},
     {"text": "Я примерю это.", "translation": "I'll try this on.", "topic": "Shopping"},
     {"text": "Где примерочная?", "translation": "Where is the fitting room?", "topic": "Shopping"},
     {"text": "Это слишком дорого.", "translation": "This is too expensive.", "topic": "Shopping"},
     {"text": "Можно скидку?", "translation": "Can I get a discount?", "topic": "Shopping"},
-    {"text": "Я возьму это.", "translation": "I'll take this.", "topic": "Shopping"}
+    {"text": "Я возьму это.", "translation": "I'll take this.", "topic": "Shopping"},
+    {"text": "Где находится вокзал?", "translation": "Where is the train station?", "topic": "Travel"},
+    {"text": "Во сколько отправляется поезд?", "translation": "What time does the train leave?", "topic": "Travel"},
+    {"text": "Как доехать до станции?", "translation": "How do I get to the station?", "topic": "Travel"},
+    {"text": "У вас есть билеты на поезд?", "translation": "Do you have tickets for the train?", "topic": "Travel"},
+    {"text": "Я хочу билет в одну сторону.", "translation": "I want a one-way ticket.", "topic": "Travel"},
+    {"text": "Это место занято?", "translation": "Is this seat taken?", "topic": "Travel"},
+    {"text": "Когда приезжает поезд?", "translation": "When does the train arrive?", "topic": "Travel"},
+    {"text": "Где находится аэропорт?", "translation": "Where is the airport?", "topic": "Travel"},
+    {"text": "Как пройти к регистрации?", "translation": "How do I get to check-in?", "topic": "Travel"},
+    {"text": "Во сколько вылетает мой рейс?", "translation": "What time is my flight?", "topic": "Travel"},
+    {"text": "У вас есть свободные места на рейс?", "translation": "Do you have available seats on the flight?", "topic": "Travel"},
+    {"text": "Где выход на посадку?", "translation": "Where is the boarding gate?", "topic": "Travel"},
+    {"text": "Могу ли я взять этот багаж?", "translation": "Can I take this luggage?", "topic": "Travel"},
+    {"text": "Где находится мой багаж?", "translation": "Where is my luggage?", "topic": "Travel"},
+    {"text": "У вас есть лекарства от простуды?", "translation": "Do you have medicine for a cold?", "topic": "Pharmacy"},
+    {"text": "Мне нужно что-то от головной боли.", "translation": "I need something for a headache.", "topic": "Pharmacy"},
+    {"text": "Это без рецепта?", "translation": "Is this over-the-counter?", "topic": "Pharmacy"},
+    {"text": "Сколько стоит это лекарство?", "translation": "How much does this medicine cost?", "topic": "Pharmacy"},
+    {"text": "У вас есть витамин C?", "translation": "Do you have vitamin C?", "topic": "Pharmacy"},
+    {"text": "Я чувствую себя плохо.", "translation": "I feel sick.", "topic": "Pharmacy"},
+    {"text": "Могу я получить рецепт?", "translation": "Can I get a prescription?", "topic": "Pharmacy"},
+    "Помогите!",  # Help!
+    "Вызовите скорую помощь!",  # Call an ambulance!
+    "У меня болит сердце.",  # I have chest pain.
+    "Где ближайшая больница?",  # Where is the nearest hospital?
+    "Я потерял паспорт.",  # I lost my passport.
+    "Мне нужно в полицию.",  # I need to go to the police.
+    "Это срочно!"  # This is urgent!
 ]
 
 # Create output directory

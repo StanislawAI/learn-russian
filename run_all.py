@@ -83,10 +83,7 @@ def open_html_file(file_path):
     # We don't exit here, as we still want the script to complete successfully
 
 if __name__ == "__main__":
-    # For fix_russian_script.py, we need to provide 'y' as input to the prompt
-    run_script("fix_russian_script.py", input_text="y\n")
-    
-    # The remaining scripts don't require input
+    # Run the scripts directly (fix_russian_script.py has been removed)
     scripts_to_run = [
         "generate_russian_audio.py",
         "update_audio_player.py"

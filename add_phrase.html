@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Multiple Russian Phrases</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 700px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        textarea {
+            width: 95%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        #phrasesInput {
+             height: 150px; /* Taller for multiple lines */
+             font-family: monospace;
+        }
+        #outputString {
+            height: 200px; /* Taller for multiple lines */
+            font-family: monospace; /* Use monospace for code-like output */
+            background-color: #eee;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #copyFeedback {
+            display: inline-block;
+            color: green;
+            font-weight: bold;
+            visibility: hidden; /* Hidden by default */
+        }
+        .instructions {
+            background-color: #e7f3fe;
+            border-left: 4px solid #2196F3;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Add Multiple Russian Phrases</h1>
+    <div class="instructions">
+        <p><strong>Instructions:</strong></p>
+        <ol>
+            <li>Paste multiple phrases into the first text box below. Each phrase should be on its own line in the format: <code>"Russian Phrase" # English Translation</code></li>
+            <li>Enter a single topic to apply to ALL these phrases.</li>
+            <li>Click "Generate Python Strings".</li>
+            <li>Copy the generated output and paste it into the <code>phrases = [...]</code> list in your <code>generate_russian_audio.py</code> file (before the closing <code>]</code>).</li>
+        </ol>
+    </div>
+
+    <form id="phraseForm">
+        <div>
+            <label for="phrasesInput">Paste Phrases Here (one per line):</label>
+            <textarea id="phrasesInput" placeholder='"Помогите!", # Help!
+"Вызовите скорую помощь!", # Call an ambulance!
+...' required></textarea>
+        </div>
+        <!-- English input removed -->
+        <div>
+            <label for="topic">Single Topic for ALL Phrases Above:</label>
+            <input type="text" id="topic" required>
+        </div>
+
+        <button type="button" onclick="generateStrings()">Generate Python Strings</button>
+    </form>
+
+    <hr style="margin: 20px 0;">
+
+    <h2>Generated Strings (Copy this block):</h2>
+    <textarea id="outputString" readonly placeholder="Python dictionary strings will appear here..."></textarea>
+    <button type="button" onclick="copyToClipboard()">Copy to Clipboard</button>
+    <span id="copyFeedback">Copied!</span>
+
+    <script>
+        function escapeQuotes(str) {
+            // Escape double quotes within the string
+            return str.replace(/"/g, '\\"');
+        }
+
+        function generateStrings() {
+            const pastedPhrases = document.getElementById('phrasesInput').value.trim();
+            const topic = escapeQuotes(document.getElementById('topic').value.trim());
+            const outputTextArea = document.getElementById('outputString');
+            const copyFeedback = document.getElementById('copyFeedback');
+            let generatedOutput = "";
+            let errors = [];
+
+            if (!pastedPhrases || !topic) {
+                outputTextArea.value = "Error: Please paste phrases and enter a topic.";
+                copyFeedback.style.visibility = 'hidden';
+                return;
+            }
+
+            const lines = pastedPhrases.split('\n');
+            const lineRegex = /^\s*\"(.*?)\"\s*,?\s*#\s*(.*?)\s*$/;
+
+            for (const line of lines) {
+                const trimmedLine = line.trim();
+                if (!trimmedLine) continue; // Skip empty lines
+
+                const match = trimmedLine.match(lineRegex);
+                
+                if (match && match[1] && match[2]) {
+                    const russian = escapeQuotes(match[1].trim());
+                    const english = escapeQuotes(match[2].trim());
+                    // Construct the Python dictionary string with 4 spaces indentation
+                    generatedOutput += `    {"text": "${russian}", "translation": "${english}", "topic": "${topic}"},
+`; 
+                } else {
+                    errors.push(`Could not parse line: ${trimmedLine}`);
+                }
+            }
+
+            if (errors.length > 0) {
+                outputTextArea.value = "Errors found during parsing:\n" + errors.join("\n") + "\n\nGenerated output for successful lines:\n" + generatedOutput;
+            } else if (generatedOutput === "") {
+                 outputTextArea.value = "Error: No valid phrase lines found in the input.";
+            } else {
+                outputTextArea.value = generatedOutput;
+            }
+            
+            copyFeedback.style.visibility = 'hidden'; // Hide feedback on new generation
+        }
+
+        function copyToClipboard() {
+            const outputTextArea = document.getElementById('outputString');
+            const copyFeedback = document.getElementById('copyFeedback');
+            
+            // Don't copy if there were only errors or no output
+            if (!outputTextArea.value || outputTextArea.value.startsWith("Error:") || outputTextArea.value.startsWith("Errors found")) {
+                 copyFeedback.textContent = "Nothing valid to copy!";
+                 copyFeedback.style.color = "red";
+                 copyFeedback.style.visibility = 'visible';
+                 setTimeout(() => { copyFeedback.style.visibility = 'hidden'; }, 3000);
+                return;
+            }
+
+            outputTextArea.select();
+            outputTextArea.setSelectionRange(0, 99999); // For mobile devices
+
+            try {
+                document.execCommand('copy');
+                copyFeedback.textContent = "Copied!";
+                copyFeedback.style.color = "green";
+                copyFeedback.style.visibility = 'visible';
+                setTimeout(() => { copyFeedback.style.visibility = 'hidden'; }, 3000);
+            } catch (err) {
+                copyFeedback.textContent = "Copy failed!";
+                copyFeedback.style.color = "red";
+                copyFeedback.style.visibility = 'visible';
+                console.error('Fallback: Oops, unable to copy', err);
+            }
+            
+             window.getSelection().removeAllRanges(); // Deselect
+        }
+        
+    </script>
+
+</body>
+</html> 
