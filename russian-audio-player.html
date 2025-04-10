@@ -13,23 +13,84 @@
             line-height: 1.6;
         }
         .phrase-container {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             padding: 15px;
             border: 1px solid #ddd;
-            border-radius: 5px;
+            border-radius: 8px;
             background-color: #f9f9f9;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .phrase-content {
+            flex: 1;
+            min-width: 300px;
+            margin-right: 15px;
+        }
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 5px;
         }
         .russian {
-            font-size: 1.5em;
+            font-size: 1.4em;
             margin-bottom: 5px;
             color: #2c3e50;
         }
         .translation {
             color: #7f8c8d;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
+            font-size: 1.1em;
         }
-        audio {
-            width: 100%;
+        .custom-player {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .play-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.2s ease;
+        }
+        .play-button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+        .play-button:active {
+            transform: scale(0.95);
+        }
+        .loop-button {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 1em;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.2s ease;
+        }
+        .loop-button:hover {
+            background-color: #27ae60;
+            transform: scale(1.05);
+        }
+        .loop-button:active {
+            transform: scale(0.95);
+        }
+        .loop-active {
+            background-color: #e74c3c;
         }
         h1 {
             color: #2c3e50;
@@ -37,524 +98,1986 @@
         }
         .phrase-number {
             color: #95a5a6;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-left: 5px;
+            padding: 5px 10px;
+            background-color: #ecf0f1;
+            border-radius: 20px;
+        }
+        .topic-tag {
+            background-color: #3498db;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
             font-size: 0.8em;
-            float: right;
+            margin-right: 8px;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+        .filter-container {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .filter-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .topic-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .topic-button {
+            background-color: #ecf0f1;
+            border: 1px solid #bdc3c7;
+            border-radius: 20px;
+            padding: 5px 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .topic-button:hover {
+            background-color: #d5dbdb;
+        }
+        .topic-button.active {
+            background-color: #3498db;
+            color: white;
+            border-color: #2980b9;
+        }
+        .reset-button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 10px;
+        }
+        .reset-button:hover {
+            background-color: #c0392b;
         }
     </style>
 </head>
 <body>
     <h1>Russian Audio Phrases</h1>
-    <p>Click on the audio players to hear each phrase pronounced in Russian.</p>
+    <p>Click on the play button to hear each phrase. Toggle the loop button to repeat automatically until stopped.</p>
 
-    <div class="phrase-container">
-        <div class="phrase-number">#1</div>
-        <div class="russian">Привет!</div>
-        <div class="translation">Hello!</div>
-        <audio controls>
-            <source src="russian_audio/phrase_1.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
+    <div class="filter-container">
+        <div class="filter-title">Filter phrases by topic:</div>
+        <div class="topic-filter" id="topicFilter">
+            <button class="topic-button" data-topic="Common Phrases">Common Phrases</button>
+            <button class="topic-button" data-topic="Conversation">Conversation</button>
+            <button class="topic-button" data-topic="Culture">Culture</button>
+            <button class="topic-button" data-topic="Directions">Directions</button>
+            <button class="topic-button" data-topic="Emergency">Emergency</button>
+            <button class="topic-button" data-topic="Food">Food</button>
+            <button class="topic-button" data-topic="Greetings">Greetings</button>
+            <button class="topic-button" data-topic="Introduction">Introduction</button>
+            <button class="topic-button" data-topic="Language">Language</button>
+            <button class="topic-button" data-topic="Money">Money</button>
+            <button class="topic-button" data-topic="Restaurant">Restaurant</button>
+            <button class="topic-button" data-topic="Shopping">Shopping</button>
+        </div>
+        <button class="reset-button" id="resetFilter">Show All Phrases</button>
     </div>
+    
+    <!-- Audio phrase containers will be generated here by JavaScript -->
+    <div id="phraseContainer">
 
-    <div class="phrase-container">
-        <div class="phrase-number">#2</div>
-        <div class="russian">Здравствуйте!</div>
-        <div class="translation">Hello! (formal)</div>
-        <audio controls>
-            <source src="russian_audio/phrase_2.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
+        <div class="phrase-container" data-topic="Greetings">
+            <div class="phrase-content">
+                <div class="russian">Привет!</div>
+                <div class="translation">Hello!</div>
+                <span class="topic-tag">Greetings</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="1">▶</button>
+                    <button class="loop-button" data-index="1">Loop</button>
+                </div>
+                <div class="phrase-number">#1</div>
+            </div>
+            <audio id="audio-1">
+                <source src="russian_audio/phrase_1.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Greetings">
+            <div class="phrase-content">
+                <div class="russian">Здравствуйте!</div>
+                <div class="translation">Hello! (formal)</div>
+                <span class="topic-tag">Greetings</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="2">▶</button>
+                    <button class="loop-button" data-index="2">Loop</button>
+                </div>
+                <div class="phrase-number">#2</div>
+            </div>
+            <audio id="audio-2">
+                <source src="russian_audio/phrase_2.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Greetings">
+            <div class="phrase-content">
+                <div class="russian">Доброе утро</div>
+                <div class="translation">Good morning</div>
+                <span class="topic-tag">Greetings</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="3">▶</button>
+                    <button class="loop-button" data-index="3">Loop</button>
+                </div>
+                <div class="phrase-number">#3</div>
+            </div>
+            <audio id="audio-3">
+                <source src="russian_audio/phrase_3.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Greetings">
+            <div class="phrase-content">
+                <div class="russian">Добрый день</div>
+                <div class="translation">Good afternoon</div>
+                <span class="topic-tag">Greetings</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="4">▶</button>
+                    <button class="loop-button" data-index="4">Loop</button>
+                </div>
+                <div class="phrase-number">#4</div>
+            </div>
+            <audio id="audio-4">
+                <source src="russian_audio/phrase_4.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Greetings">
+            <div class="phrase-content">
+                <div class="russian">Добрый вечер</div>
+                <div class="translation">Good evening</div>
+                <span class="topic-tag">Greetings</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="5">▶</button>
+                    <button class="loop-button" data-index="5">Loop</button>
+                </div>
+                <div class="phrase-number">#5</div>
+            </div>
+            <audio id="audio-5">
+                <source src="russian_audio/phrase_5.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Greetings">
+            <div class="phrase-content">
+                <div class="russian">Пока!</div>
+                <div class="translation">Bye!</div>
+                <span class="topic-tag">Greetings</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="6">▶</button>
+                    <button class="loop-button" data-index="6">Loop</button>
+                </div>
+                <div class="phrase-number">#6</div>
+            </div>
+            <audio id="audio-6">
+                <source src="russian_audio/phrase_6.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Greetings">
+            <div class="phrase-content">
+                <div class="russian">До свидания</div>
+                <div class="translation">Goodbye (formal)</div>
+                <span class="topic-tag">Greetings</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="7">▶</button>
+                    <button class="loop-button" data-index="7">Loop</button>
+                </div>
+                <div class="phrase-number">#7</div>
+            </div>
+            <audio id="audio-7">
+                <source src="russian_audio/phrase_7.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Introduction">
+            <div class="phrase-content">
+                <div class="russian">Как тебя зовут?</div>
+                <div class="translation">What's your name?</div>
+                <span class="topic-tag">Introduction</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="8">▶</button>
+                    <button class="loop-button" data-index="8">Loop</button>
+                </div>
+                <div class="phrase-number">#8</div>
+            </div>
+            <audio id="audio-8">
+                <source src="russian_audio/phrase_8.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Introduction">
+            <div class="phrase-content">
+                <div class="russian">Меня зовут Станислав</div>
+                <div class="translation">My name is Stanislav</div>
+                <span class="topic-tag">Introduction</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="9">▶</button>
+                    <button class="loop-button" data-index="9">Loop</button>
+                </div>
+                <div class="phrase-number">#9</div>
+            </div>
+            <audio id="audio-9">
+                <source src="russian_audio/phrase_9.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Introduction">
+            <div class="phrase-content">
+                <div class="russian">Очень приятно</div>
+                <div class="translation">Nice to meet you</div>
+                <span class="topic-tag">Introduction</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="10">▶</button>
+                    <button class="loop-button" data-index="10">Loop</button>
+                </div>
+                <div class="phrase-number">#10</div>
+            </div>
+            <audio id="audio-10">
+                <source src="russian_audio/phrase_10.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Conversation">
+            <div class="phrase-content">
+                <div class="russian">Как дела?</div>
+                <div class="translation">How are you?</div>
+                <span class="topic-tag">Conversation</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="11">▶</button>
+                    <button class="loop-button" data-index="11">Loop</button>
+                </div>
+                <div class="phrase-number">#11</div>
+            </div>
+            <audio id="audio-11">
+                <source src="russian_audio/phrase_11.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Conversation">
+            <div class="phrase-content">
+                <div class="russian">Хорошо</div>
+                <div class="translation">Good</div>
+                <span class="topic-tag">Conversation</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="12">▶</button>
+                    <button class="loop-button" data-index="12">Loop</button>
+                </div>
+                <div class="phrase-number">#12</div>
+            </div>
+            <audio id="audio-12">
+                <source src="russian_audio/phrase_12.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Conversation">
+            <div class="phrase-content">
+                <div class="russian">Так себе</div>
+                <div class="translation">So-so</div>
+                <span class="topic-tag">Conversation</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="13">▶</button>
+                    <button class="loop-button" data-index="13">Loop</button>
+                </div>
+                <div class="phrase-number">#13</div>
+            </div>
+            <audio id="audio-13">
+                <source src="russian_audio/phrase_13.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Conversation">
+            <div class="phrase-content">
+                <div class="russian">Плохо</div>
+                <div class="translation">Bad</div>
+                <span class="topic-tag">Conversation</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="14">▶</button>
+                    <button class="loop-button" data-index="14">Loop</button>
+                </div>
+                <div class="phrase-number">#14</div>
+            </div>
+            <audio id="audio-14">
+                <source src="russian_audio/phrase_14.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Language">
+            <div class="phrase-content">
+                <div class="russian">Ты говоришь по-русски?</div>
+                <div class="translation">Do you speak Russian?</div>
+                <span class="topic-tag">Language</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="15">▶</button>
+                    <button class="loop-button" data-index="15">Loop</button>
+                </div>
+                <div class="phrase-number">#15</div>
+            </div>
+            <audio id="audio-15">
+                <source src="russian_audio/phrase_15.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Language">
+            <div class="phrase-content">
+                <div class="russian">Да, немного</div>
+                <div class="translation">Yes, a little</div>
+                <span class="topic-tag">Language</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="16">▶</button>
+                    <button class="loop-button" data-index="16">Loop</button>
+                </div>
+                <div class="phrase-number">#16</div>
+            </div>
+            <audio id="audio-16">
+                <source src="russian_audio/phrase_16.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Directions">
+            <div class="phrase-content">
+                <div class="russian">Где туалет?</div>
+                <div class="translation">Where is the bathroom?</div>
+                <span class="topic-tag">Directions</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="17">▶</button>
+                    <button class="loop-button" data-index="17">Loop</button>
+                </div>
+                <div class="phrase-number">#17</div>
+            </div>
+            <audio id="audio-17">
+                <source src="russian_audio/phrase_17.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Shopping">
+            <div class="phrase-content">
+                <div class="russian">Сколько это стоит?</div>
+                <div class="translation">How much does this cost?</div>
+                <span class="topic-tag">Shopping</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="18">▶</button>
+                    <button class="loop-button" data-index="18">Loop</button>
+                </div>
+                <div class="phrase-number">#18</div>
+            </div>
+            <audio id="audio-18">
+                <source src="russian_audio/phrase_18.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Language">
+            <div class="phrase-content">
+                <div class="russian">Я не понимаю</div>
+                <div class="translation">I don't understand</div>
+                <span class="topic-tag">Language</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="19">▶</button>
+                    <button class="loop-button" data-index="19">Loop</button>
+                </div>
+                <div class="phrase-number">#19</div>
+            </div>
+            <audio id="audio-19">
+                <source src="russian_audio/phrase_19.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Common Phrases">
+            <div class="phrase-content">
+                <div class="russian">Пожалуйста</div>
+                <div class="translation">Please</div>
+                <span class="topic-tag">Common Phrases</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="20">▶</button>
+                    <button class="loop-button" data-index="20">Loop</button>
+                </div>
+                <div class="phrase-number">#20</div>
+            </div>
+            <audio id="audio-20">
+                <source src="russian_audio/phrase_20.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Common Phrases">
+            <div class="phrase-content">
+                <div class="russian">Спасибо</div>
+                <div class="translation">Thank you</div>
+                <span class="topic-tag">Common Phrases</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="21">▶</button>
+                    <button class="loop-button" data-index="21">Loop</button>
+                </div>
+                <div class="phrase-number">#21</div>
+            </div>
+            <audio id="audio-21">
+                <source src="russian_audio/phrase_21.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Common Phrases">
+            <div class="phrase-content">
+                <div class="russian">Извините</div>
+                <div class="translation">Excuse me / I'm sorry</div>
+                <span class="topic-tag">Common Phrases</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="22">▶</button>
+                    <button class="loop-button" data-index="22">Loop</button>
+                </div>
+                <div class="phrase-number">#22</div>
+            </div>
+            <audio id="audio-22">
+                <source src="russian_audio/phrase_22.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Restaurant">
+            <div class="phrase-content">
+                <div class="russian">Что будете заказывать?</div>
+                <div class="translation">What would you like to order?</div>
+                <span class="topic-tag">Restaurant</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="23">▶</button>
+                    <button class="loop-button" data-index="23">Loop</button>
+                </div>
+                <div class="phrase-number">#23</div>
+            </div>
+            <audio id="audio-23">
+                <source src="russian_audio/phrase_23.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Restaurant">
+            <div class="phrase-content">
+                <div class="russian">Я хочу кофе, пожалуйста</div>
+                <div class="translation">I would like coffee, please</div>
+                <span class="topic-tag">Restaurant</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="24">▶</button>
+                    <button class="loop-button" data-index="24">Loop</button>
+                </div>
+                <div class="phrase-number">#24</div>
+            </div>
+            <audio id="audio-24">
+                <source src="russian_audio/phrase_24.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Money">
+            <div class="phrase-content">
+                <div class="russian">С вас 200 рублей</div>
+                <div class="translation">That will be 200 rubles</div>
+                <span class="topic-tag">Money</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="25">▶</button>
+                    <button class="loop-button" data-index="25">Loop</button>
+                </div>
+                <div class="phrase-number">#25</div>
+            </div>
+            <audio id="audio-25">
+                <source src="russian_audio/phrase_25.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Money">
+            <div class="phrase-content">
+                <div class="russian">Сколько это в евро?</div>
+                <div class="translation">How much is that in euros?</div>
+                <span class="topic-tag">Money</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="26">▶</button>
+                    <button class="loop-button" data-index="26">Loop</button>
+                </div>
+                <div class="phrase-number">#26</div>
+            </div>
+            <audio id="audio-26">
+                <source src="russian_audio/phrase_26.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Common Phrases">
+            <div class="phrase-content">
+                <div class="russian">Вот, пожалуйста</div>
+                <div class="translation">Here you go</div>
+                <span class="topic-tag">Common Phrases</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="27">▶</button>
+                    <button class="loop-button" data-index="27">Loop</button>
+                </div>
+                <div class="phrase-number">#27</div>
+            </div>
+            <audio id="audio-27">
+                <source src="russian_audio/phrase_27.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Language">
+            <div class="phrase-content">
+                <div class="russian">Я учу русский язык</div>
+                <div class="translation">I am learning Russian</div>
+                <span class="topic-tag">Language</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="28">▶</button>
+                    <button class="loop-button" data-index="28">Loop</button>
+                </div>
+                <div class="phrase-number">#28</div>
+            </div>
+            <audio id="audio-28">
+                <source src="russian_audio/phrase_28.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Culture">
+            <div class="phrase-content">
+                <div class="russian">Мне нравится русская культура</div>
+                <div class="translation">I like Russian culture</div>
+                <span class="topic-tag">Culture</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="29">▶</button>
+                    <button class="loop-button" data-index="29">Loop</button>
+                </div>
+                <div class="phrase-number">#29</div>
+            </div>
+            <audio id="audio-29">
+                <source src="russian_audio/phrase_29.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Language">
+            <div class="phrase-content">
+                <div class="russian">Я хочу говорить по-русски</div>
+                <div class="translation">I want to speak Russian</div>
+                <span class="topic-tag">Language</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="30">▶</button>
+                    <button class="loop-button" data-index="30">Loop</button>
+                </div>
+                <div class="phrase-number">#30</div>
+            </div>
+            <audio id="audio-30">
+                <source src="russian_audio/phrase_30.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Language">
+            <div class="phrase-content">
+                <div class="russian">Русский язык сложный</div>
+                <div class="translation">Russian language is difficult</div>
+                <span class="topic-tag">Language</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="31">▶</button>
+                    <button class="loop-button" data-index="31">Loop</button>
+                </div>
+                <div class="phrase-number">#31</div>
+            </div>
+            <audio id="audio-31">
+                <source src="russian_audio/phrase_31.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Language">
+            <div class="phrase-content">
+                <div class="russian">Но очень интересный</div>
+                <div class="translation">But very interesting</div>
+                <span class="topic-tag">Language</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="32">▶</button>
+                    <button class="loop-button" data-index="32">Loop</button>
+                </div>
+                <div class="phrase-number">#32</div>
+            </div>
+            <audio id="audio-32">
+                <source src="russian_audio/phrase_32.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Food">
+            <div class="phrase-content">
+                <div class="russian">Чили</div>
+                <div class="translation">Chili</div>
+                <span class="topic-tag">Food</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="33">▶</button>
+                    <button class="loop-button" data-index="33">Loop</button>
+                </div>
+                <div class="phrase-number">#33</div>
+            </div>
+            <audio id="audio-33">
+                <source src="russian_audio/phrase_33.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Food">
+            <div class="phrase-content">
+                <div class="russian">Перец</div>
+                <div class="translation">Pepper</div>
+                <span class="topic-tag">Food</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="34">▶</button>
+                    <button class="loop-button" data-index="34">Loop</button>
+                </div>
+                <div class="phrase-number">#34</div>
+            </div>
+            <audio id="audio-34">
+                <source src="russian_audio/phrase_34.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Food">
+            <div class="phrase-content">
+                <div class="russian">Суп</div>
+                <div class="translation">Soup</div>
+                <span class="topic-tag">Food</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="35">▶</button>
+                    <button class="loop-button" data-index="35">Loop</button>
+                </div>
+                <div class="phrase-number">#35</div>
+            </div>
+            <audio id="audio-35">
+                <source src="russian_audio/phrase_35.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Food">
+            <div class="phrase-content">
+                <div class="russian">Ресторан</div>
+                <div class="translation">Restaurant</div>
+                <span class="topic-tag">Food</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="36">▶</button>
+                    <button class="loop-button" data-index="36">Loop</button>
+                </div>
+                <div class="phrase-number">#36</div>
+            </div>
+            <audio id="audio-36">
+                <source src="russian_audio/phrase_36.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Food">
+            <div class="phrase-content">
+                <div class="russian">Я голоден</div>
+                <div class="translation">I'm hungry</div>
+                <span class="topic-tag">Food</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="37">▶</button>
+                    <button class="loop-button" data-index="37">Loop</button>
+                </div>
+                <div class="phrase-number">#37</div>
+            </div>
+            <audio id="audio-37">
+                <source src="russian_audio/phrase_37.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Food">
+            <div class="phrase-content">
+                <div class="russian">Очень вкусно</div>
+                <div class="translation">Very tasty</div>
+                <span class="topic-tag">Food</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="38">▶</button>
+                    <button class="loop-button" data-index="38">Loop</button>
+                </div>
+                <div class="phrase-number">#38</div>
+            </div>
+            <audio id="audio-38">
+                <source src="russian_audio/phrase_38.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Restaurant">
+            <div class="phrase-content">
+                <div class="russian">Я бы хотел борщ, пожалуйста.</div>
+                <div class="translation">I would like borscht, please.</div>
+                <span class="topic-tag">Restaurant</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="39">▶</button>
+                    <button class="loop-button" data-index="39">Loop</button>
+                </div>
+                <div class="phrase-number">#39</div>
+            </div>
+            <audio id="audio-39">
+                <source src="russian_audio/phrase_39.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Restaurant">
+            <div class="phrase-content">
+                <div class="russian">Меню, пожалуйста.</div>
+                <div class="translation">The menu, please.</div>
+                <span class="topic-tag">Restaurant</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="40">▶</button>
+                    <button class="loop-button" data-index="40">Loop</button>
+                </div>
+                <div class="phrase-number">#40</div>
+            </div>
+            <audio id="audio-40">
+                <source src="russian_audio/phrase_40.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Restaurant">
+            <div class="phrase-content">
+                <div class="russian">Что вы порекомендуете?</div>
+                <div class="translation">What would you recommend?</div>
+                <span class="topic-tag">Restaurant</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="41">▶</button>
+                    <button class="loop-button" data-index="41">Loop</button>
+                </div>
+                <div class="phrase-number">#41</div>
+            </div>
+            <audio id="audio-41">
+                <source src="russian_audio/phrase_41.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Restaurant">
+            <div class="phrase-content">
+                <div class="russian">Можно мне…?</div>
+                <div class="translation">Can I have...?</div>
+                <span class="topic-tag">Restaurant</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="42">▶</button>
+                    <button class="loop-button" data-index="42">Loop</button>
+                </div>
+                <div class="phrase-number">#42</div>
+            </div>
+            <audio id="audio-42">
+                <source src="russian_audio/phrase_42.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Restaurant">
+            <div class="phrase-content">
+                <div class="russian">Я возьму…</div>
+                <div class="translation">I'll take…</div>
+                <span class="topic-tag">Restaurant</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="43">▶</button>
+                    <button class="loop-button" data-index="43">Loop</button>
+                </div>
+                <div class="phrase-number">#43</div>
+            </div>
+            <audio id="audio-43">
+                <source src="russian_audio/phrase_43.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Restaurant">
+            <div class="phrase-content">
+                <div class="russian">Счёт, пожалуйста.</div>
+                <div class="translation">The bill, please.</div>
+                <span class="topic-tag">Restaurant</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="44">▶</button>
+                    <button class="loop-button" data-index="44">Loop</button>
+                </div>
+                <div class="phrase-number">#44</div>
+            </div>
+            <audio id="audio-44">
+                <source src="russian_audio/phrase_44.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Directions">
+            <div class="phrase-content">
+                <div class="russian">Где туалет?</div>
+                <div class="translation">Where is the toilet?</div>
+                <span class="topic-tag">Directions</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="45">▶</button>
+                    <button class="loop-button" data-index="45">Loop</button>
+                </div>
+                <div class="phrase-number">#45</div>
+            </div>
+            <audio id="audio-45">
+                <source src="russian_audio/phrase_45.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Food">
+            <div class="phrase-content">
+                <div class="russian">Это острое?</div>
+                <div class="translation">Is this spicy?</div>
+                <span class="topic-tag">Food</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="46">▶</button>
+                    <button class="loop-button" data-index="46">Loop</button>
+                </div>
+                <div class="phrase-number">#46</div>
+            </div>
+            <audio id="audio-46">
+                <source src="russian_audio/phrase_46.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Food">
+            <div class="phrase-content">
+                <div class="russian">У вас есть вегетарианские блюда?</div>
+                <div class="translation">Do you have vegetarian dishes?</div>
+                <span class="topic-tag">Food</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="47">▶</button>
+                    <button class="loop-button" data-index="47">Loop</button>
+                </div>
+                <div class="phrase-number">#47</div>
+            </div>
+            <audio id="audio-47">
+                <source src="russian_audio/phrase_47.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Emergency">
+            <div class="phrase-content">
+                <div class="russian">Мне нужна помощь.</div>
+                <div class="translation">I need help.</div>
+                <span class="topic-tag">Emergency</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="48">▶</button>
+                    <button class="loop-button" data-index="48">Loop</button>
+                </div>
+                <div class="phrase-number">#48</div>
+            </div>
+            <audio id="audio-48">
+                <source src="russian_audio/phrase_48.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Common Phrases">
+            <div class="phrase-content">
+                <div class="russian">Пожалуйста</div>
+                <div class="translation">Please / You're welcome</div>
+                <span class="topic-tag">Common Phrases</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="49">▶</button>
+                    <button class="loop-button" data-index="49">Loop</button>
+                </div>
+                <div class="phrase-number">#49</div>
+            </div>
+            <audio id="audio-49">
+                <source src="russian_audio/phrase_49.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Common Phrases">
+            <div class="phrase-content">
+                <div class="russian">Спасибо</div>
+                <div class="translation">Thank you</div>
+                <span class="topic-tag">Common Phrases</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="50">▶</button>
+                    <button class="loop-button" data-index="50">Loop</button>
+                </div>
+                <div class="phrase-number">#50</div>
+            </div>
+            <audio id="audio-50">
+                <source src="russian_audio/phrase_50.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Common Phrases">
+            <div class="phrase-content">
+                <div class="russian">Извините</div>
+                <div class="translation">Excuse me / I'm sorry</div>
+                <span class="topic-tag">Common Phrases</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="51">▶</button>
+                    <button class="loop-button" data-index="51">Loop</button>
+                </div>
+                <div class="phrase-number">#51</div>
+            </div>
+            <audio id="audio-51">
+                <source src="russian_audio/phrase_51.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Shopping">
+            <div class="phrase-content">
+                <div class="russian">Сколько стоит?</div>
+                <div class="translation">How much does it cost?</div>
+                <span class="topic-tag">Shopping</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="52">▶</button>
+                    <button class="loop-button" data-index="52">Loop</button>
+                </div>
+                <div class="phrase-number">#52</div>
+            </div>
+            <audio id="audio-52">
+                <source src="russian_audio/phrase_52.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Shopping">
+            <div class="phrase-content">
+                <div class="russian">Это дорого!</div>
+                <div class="translation">This is expensive!</div>
+                <span class="topic-tag">Shopping</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="53">▶</button>
+                    <button class="loop-button" data-index="53">Loop</button>
+                </div>
+                <div class="phrase-number">#53</div>
+            </div>
+            <audio id="audio-53">
+                <source src="russian_audio/phrase_53.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Shopping">
+            <div class="phrase-content">
+                <div class="russian">Могу я получить скидку?</div>
+                <div class="translation">Can I get a discount?</div>
+                <span class="topic-tag">Shopping</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="54">▶</button>
+                    <button class="loop-button" data-index="54">Loop</button>
+                </div>
+                <div class="phrase-number">#54</div>
+            </div>
+            <audio id="audio-54">
+                <source src="russian_audio/phrase_54.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Shopping">
+            <div class="phrase-content">
+                <div class="russian">Я возьму это.</div>
+                <div class="translation">I'll take this.</div>
+                <span class="topic-tag">Shopping</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="55">▶</button>
+                    <button class="loop-button" data-index="55">Loop</button>
+                </div>
+                <div class="phrase-number">#55</div>
+            </div>
+            <audio id="audio-55">
+                <source src="russian_audio/phrase_55.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Shopping">
+            <div class="phrase-content">
+                <div class="russian">Где я могу купить…?</div>
+                <div class="translation">Where can I buy…?</div>
+                <span class="topic-tag">Shopping</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="56">▶</button>
+                    <button class="loop-button" data-index="56">Loop</button>
+                </div>
+                <div class="phrase-number">#56</div>
+            </div>
+            <audio id="audio-56">
+                <source src="russian_audio/phrase_56.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Shopping">
+            <div class="phrase-content">
+                <div class="russian">Я ищу…</div>
+                <div class="translation">I'm looking for…</div>
+                <span class="topic-tag">Shopping</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="57">▶</button>
+                    <button class="loop-button" data-index="57">Loop</button>
+                </div>
+                <div class="phrase-number">#57</div>
+            </div>
+            <audio id="audio-57">
+                <source src="russian_audio/phrase_57.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Shopping">
+            <div class="phrase-content">
+                <div class="russian">У вас есть…?</div>
+                <div class="translation">Do you have…?</div>
+                <span class="topic-tag">Shopping</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="58">▶</button>
+                    <button class="loop-button" data-index="58">Loop</button>
+                </div>
+                <div class="phrase-number">#58</div>
+            </div>
+            <audio id="audio-58">
+                <source src="russian_audio/phrase_58.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Shopping">
+            <div class="phrase-content">
+                <div class="russian">Это свежие продукты?</div>
+                <div class="translation">Are these fresh products?</div>
+                <span class="topic-tag">Shopping</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="59">▶</button>
+                    <button class="loop-button" data-index="59">Loop</button>
+                </div>
+                <div class="phrase-number">#59</div>
+            </div>
+            <audio id="audio-59">
+                <source src="russian_audio/phrase_59.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Money">
+            <div class="phrase-content">
+                <div class="russian">Вы принимаете карты?</div>
+                <div class="translation">Do you accept cards?</div>
+                <span class="topic-tag">Money</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="60">▶</button>
+                    <button class="loop-button" data-index="60">Loop</button>
+                </div>
+                <div class="phrase-number">#60</div>
+            </div>
+            <audio id="audio-60">
+                <source src="russian_audio/phrase_60.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Common Phrases">
+            <div class="phrase-content">
+                <div class="russian">Да, конечно.</div>
+                <div class="translation">Yes, of course.</div>
+                <span class="topic-tag">Common Phrases</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="61">▶</button>
+                    <button class="loop-button" data-index="61">Loop</button>
+                </div>
+                <div class="phrase-number">#61</div>
+            </div>
+            <audio id="audio-61">
+                <source src="russian_audio/phrase_61.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Money">
+            <div class="phrase-content">
+                <div class="russian">Нет, только наличными.</div>
+                <div class="translation">No, only cash.</div>
+                <span class="topic-tag">Money</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="62">▶</button>
+                    <button class="loop-button" data-index="62">Loop</button>
+                </div>
+                <div class="phrase-number">#62</div>
+            </div>
+            <audio id="audio-62">
+                <source src="russian_audio/phrase_62.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Common Phrases">
+            <div class="phrase-content">
+                <div class="russian">Спасибо за помощь.</div>
+                <div class="translation">Thank you for the help.</div>
+                <span class="topic-tag">Common Phrases</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="63">▶</button>
+                    <button class="loop-button" data-index="63">Loop</button>
+                </div>
+                <div class="phrase-number">#63</div>
+            </div>
+            <audio id="audio-63">
+                <source src="russian_audio/phrase_63.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Greetings">
+            <div class="phrase-content">
+                <div class="russian">До свидания!</div>
+                <div class="translation">Goodbye!</div>
+                <span class="topic-tag">Greetings</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="64">▶</button>
+                    <button class="loop-button" data-index="64">Loop</button>
+                </div>
+                <div class="phrase-number">#64</div>
+            </div>
+            <audio id="audio-64">
+                <source src="russian_audio/phrase_64.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Directions">
+            <div class="phrase-content">
+                <div class="russian">Где находится…?</div>
+                <div class="translation">Where is … located?</div>
+                <span class="topic-tag">Directions</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="65">▶</button>
+                    <button class="loop-button" data-index="65">Loop</button>
+                </div>
+                <div class="phrase-number">#65</div>
+            </div>
+            <audio id="audio-65">
+                <source src="russian_audio/phrase_65.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Directions">
+            <div class="phrase-content">
+                <div class="russian">Как пройти к…?</div>
+                <div class="translation">How do I get to …?</div>
+                <span class="topic-tag">Directions</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="66">▶</button>
+                    <button class="loop-button" data-index="66">Loop</button>
+                </div>
+                <div class="phrase-number">#66</div>
+            </div>
+            <audio id="audio-66">
+                <source src="russian_audio/phrase_66.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Directions">
+            <div class="phrase-content">
+                <div class="russian">Сколько времени до…?</div>
+                <div class="translation">How much time to …?</div>
+                <span class="topic-tag">Directions</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="67">▶</button>
+                    <button class="loop-button" data-index="67">Loop</button>
+                </div>
+                <div class="phrase-number">#67</div>
+            </div>
+            <audio id="audio-67">
+                <source src="russian_audio/phrase_67.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Directions">
+            <div class="phrase-content">
+                <div class="russian">Это далеко?</div>
+                <div class="translation">Is it far?</div>
+                <span class="topic-tag">Directions</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="68">▶</button>
+                    <button class="loop-button" data-index="68">Loop</button>
+                </div>
+                <div class="phrase-number">#68</div>
+            </div>
+            <audio id="audio-68">
+                <source src="russian_audio/phrase_68.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Directions">
+            <div class="phrase-content">
+                <div class="russian">Я потерялся.</div>
+                <div class="translation">I'm lost.</div>
+                <span class="topic-tag">Directions</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="69">▶</button>
+                    <button class="loop-button" data-index="69">Loop</button>
+                </div>
+                <div class="phrase-number">#69</div>
+            </div>
+            <audio id="audio-69">
+                <source src="russian_audio/phrase_69.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Emergency">
+            <div class="phrase-content">
+                <div class="russian">Можете помочь мне?</div>
+                <div class="translation">Can you help me?</div>
+                <span class="topic-tag">Emergency</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="70">▶</button>
+                    <button class="loop-button" data-index="70">Loop</button>
+                </div>
+                <div class="phrase-number">#70</div>
+            </div>
+            <audio id="audio-70">
+                <source src="russian_audio/phrase_70.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Directions">
+            <div class="phrase-content">
+                <div class="russian">Поверните направо/налево.</div>
+                <div class="translation">Turn right/left.</div>
+                <span class="topic-tag">Directions</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="71">▶</button>
+                    <button class="loop-button" data-index="71">Loop</button>
+                </div>
+                <div class="phrase-number">#71</div>
+            </div>
+            <audio id="audio-71">
+                <source src="russian_audio/phrase_71.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Directions">
+            <div class="phrase-content">
+                <div class="russian">Идите прямо.</div>
+                <div class="translation">Go straight.</div>
+                <span class="topic-tag">Directions</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="72">▶</button>
+                    <button class="loop-button" data-index="72">Loop</button>
+                </div>
+                <div class="phrase-number">#72</div>
+            </div>
+            <audio id="audio-72">
+                <source src="russian_audio/phrase_72.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Directions">
+            <div class="phrase-content">
+                <div class="russian">Поверните на следующий угол.</div>
+                <div class="translation">Turn at the next corner.</div>
+                <span class="topic-tag">Directions</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="73">▶</button>
+                    <button class="loop-button" data-index="73">Loop</button>
+                </div>
+                <div class="phrase-number">#73</div>
+            </div>
+            <audio id="audio-73">
+                <source src="russian_audio/phrase_73.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Directions">
+            <div class="phrase-content">
+                <div class="russian">Это будет справа/слева.</div>
+                <div class="translation">It will be on the right/left.</div>
+                <span class="topic-tag">Directions</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="74">▶</button>
+                    <button class="loop-button" data-index="74">Loop</button>
+                </div>
+                <div class="phrase-number">#74</div>
+            </div>
+            <audio id="audio-74">
+                <source src="russian_audio/phrase_74.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Directions">
+            <div class="phrase-content">
+                <div class="russian">Я заблудился.</div>
+                <div class="translation">I am lost.</div>
+                <span class="topic-tag">Directions</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="75">▶</button>
+                    <button class="loop-button" data-index="75">Loop</button>
+                </div>
+                <div class="phrase-number">#75</div>
+            </div>
+            <audio id="audio-75">
+                <source src="russian_audio/phrase_75.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Language">
+            <div class="phrase-content">
+                <div class="russian">Я изучаю русский язык.</div>
+                <div class="translation">I am studying Russian language.</div>
+                <span class="topic-tag">Language</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="76">▶</button>
+                    <button class="loop-button" data-index="76">Loop</button>
+                </div>
+                <div class="phrase-number">#76</div>
+            </div>
+            <audio id="audio-76">
+                <source src="russian_audio/phrase_76.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Directions">
+            <div class="phrase-content">
+                <div class="russian">У меня бронь.</div>
+                <div class="translation">I have a reservation.</div>
+                <span class="topic-tag">Directions</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="77">▶</button>
+                    <button class="loop-button" data-index="77">Loop</button>
+                </div>
+                <div class="phrase-number">#77</div>
+            </div>
+            <audio id="audio-77">
+                <source src="russian_audio/phrase_77.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Directions">
+            <div class="phrase-content">
+                <div class="russian">Я забронировал номер.</div>
+                <div class="translation">I booked a room.</div>
+                <span class="topic-tag">Directions</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="78">▶</button>
+                    <button class="loop-button" data-index="78">Loop</button>
+                </div>
+                <div class="phrase-number">#78</div>
+            </div>
+            <audio id="audio-78">
+                <source src="russian_audio/phrase_78.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Greetings">
+            <div class="phrase-content">
+                <div class="russian">На какое имя?</div>
+                <div class="translation">Under which name?</div>
+                <span class="topic-tag">Greetings</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="79">▶</button>
+                    <button class="loop-button" data-index="79">Loop</button>
+                </div>
+                <div class="phrase-number">#79</div>
+            </div>
+            <audio id="audio-79">
+                <source src="russian_audio/phrase_79.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Directions">
+            <div class="phrase-content">
+                <div class="russian">Я хочу забронировать номер.</div>
+                <div class="translation">I would like to book a room.</div>
+                <span class="topic-tag">Directions</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="80">▶</button>
+                    <button class="loop-button" data-index="80">Loop</button>
+                </div>
+                <div class="phrase-number">#80</div>
+            </div>
+            <audio id="audio-80">
+                <source src="russian_audio/phrase_80.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Directions">
+            <div class="phrase-content">
+                <div class="russian">Есть ли у вас свободные номера?</div>
+                <div class="translation">Do you have any available rooms?</div>
+                <span class="topic-tag">Directions</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="81">▶</button>
+                    <button class="loop-button" data-index="81">Loop</button>
+                </div>
+                <div class="phrase-number">#81</div>
+            </div>
+            <audio id="audio-81">
+                <source src="russian_audio/phrase_81.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Directions">
+            <div class="phrase-content">
+                <div class="russian">Где мой номер?</div>
+                <div class="translation">Where is my room?</div>
+                <span class="topic-tag">Directions</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="82">▶</button>
+                    <button class="loop-button" data-index="82">Loop</button>
+                </div>
+                <div class="phrase-number">#82</div>
+            </div>
+            <audio id="audio-82">
+                <source src="russian_audio/phrase_82.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Directions">
+            <div class="phrase-content">
+                <div class="russian">У меня проблемы с Wi-Fi.</div>
+                <div class="translation">I have a problem with the Wi-Fi.</div>
+                <span class="topic-tag">Directions</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="83">▶</button>
+                    <button class="loop-button" data-index="83">Loop</button>
+                </div>
+                <div class="phrase-number">#83</div>
+            </div>
+            <audio id="audio-83">
+                <source src="russian_audio/phrase_83.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Common Phrases">
+            <div class="phrase-content">
+                <div class="russian">Могу я получить ключ от другого номера?</div>
+                <div class="translation">Can I get the key to another room?</div>
+                <span class="topic-tag">Common Phrases</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="84">▶</button>
+                    <button class="loop-button" data-index="84">Loop</button>
+                </div>
+                <div class="phrase-number">#84</div>
+            </div>
+            <audio id="audio-84">
+                <source src="russian_audio/phrase_84.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Directions">
+            <div class="phrase-content">
+                <div class="russian">Я хочу выселиться.</div>
+                <div class="translation">I would like to check out.</div>
+                <span class="topic-tag">Directions</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="85">▶</button>
+                    <button class="loop-button" data-index="85">Loop</button>
+                </div>
+                <div class="phrase-number">#85</div>
+            </div>
+            <audio id="audio-85">
+                <source src="russian_audio/phrase_85.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Directions">
+            <div class="phrase-content">
+                <div class="russian">Сколько я должен заплатить?</div>
+                <div class="translation">How much do I owe?</div>
+                <span class="topic-tag">Directions</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="86">▶</button>
+                    <button class="loop-button" data-index="86">Loop</button>
+                </div>
+                <div class="phrase-number">#86</div>
+            </div>
+            <audio id="audio-86">
+                <source src="russian_audio/phrase_86.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Common Phrases">
+            <div class="phrase-content">
+                <div class="russian">Спасибо за ваше обслуживание.</div>
+                <div class="translation">Thank you for your service.</div>
+                <span class="topic-tag">Common Phrases</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="87">▶</button>
+                    <button class="loop-button" data-index="87">Loop</button>
+                </div>
+                <div class="phrase-number">#87</div>
+            </div>
+            <audio id="audio-87">
+                <source src="russian_audio/phrase_87.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Shopping">
+            <div class="phrase-content">
+                <div class="russian">Сколько это стоит?</div>
+                <div class="translation">How much does it cost?</div>
+                <span class="topic-tag">Shopping</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="88">▶</button>
+                    <button class="loop-button" data-index="88">Loop</button>
+                </div>
+                <div class="phrase-number">#88</div>
+            </div>
+            <audio id="audio-88">
+                <source src="russian_audio/phrase_88.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Shopping">
+            <div class="phrase-content">
+                <div class="russian">У вас есть другой размер?</div>
+                <div class="translation">Do you have another size?</div>
+                <span class="topic-tag">Shopping</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="89">▶</button>
+                    <button class="loop-button" data-index="89">Loop</button>
+                </div>
+                <div class="phrase-number">#89</div>
+            </div>
+            <audio id="audio-89">
+                <source src="russian_audio/phrase_89.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Shopping">
+            <div class="phrase-content">
+                <div class="russian">Я примерю это.</div>
+                <div class="translation">I'll try this on.</div>
+                <span class="topic-tag">Shopping</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="90">▶</button>
+                    <button class="loop-button" data-index="90">Loop</button>
+                </div>
+                <div class="phrase-number">#90</div>
+            </div>
+            <audio id="audio-90">
+                <source src="russian_audio/phrase_90.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Shopping">
+            <div class="phrase-content">
+                <div class="russian">Где примерочная?</div>
+                <div class="translation">Where is the fitting room?</div>
+                <span class="topic-tag">Shopping</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="91">▶</button>
+                    <button class="loop-button" data-index="91">Loop</button>
+                </div>
+                <div class="phrase-number">#91</div>
+            </div>
+            <audio id="audio-91">
+                <source src="russian_audio/phrase_91.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Shopping">
+            <div class="phrase-content">
+                <div class="russian">Это слишком дорого.</div>
+                <div class="translation">This is too expensive.</div>
+                <span class="topic-tag">Shopping</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="92">▶</button>
+                    <button class="loop-button" data-index="92">Loop</button>
+                </div>
+                <div class="phrase-number">#92</div>
+            </div>
+            <audio id="audio-92">
+                <source src="russian_audio/phrase_92.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Shopping">
+            <div class="phrase-content">
+                <div class="russian">Можно скидку?</div>
+                <div class="translation">Can I get a discount?</div>
+                <span class="topic-tag">Shopping</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="93">▶</button>
+                    <button class="loop-button" data-index="93">Loop</button>
+                </div>
+                <div class="phrase-number">#93</div>
+            </div>
+            <audio id="audio-93">
+                <source src="russian_audio/phrase_93.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="phrase-container" data-topic="Shopping">
+            <div class="phrase-content">
+                <div class="russian">Я возьму это.</div>
+                <div class="translation">I'll take this.</div>
+                <span class="topic-tag">Shopping</span>
+            </div>
+            <div class="audio-controls">
+                <div class="custom-player">
+                    <button class="play-button" data-index="94">▶</button>
+                    <button class="loop-button" data-index="94">Loop</button>
+                </div>
+                <div class="phrase-number">#94</div>
+            </div>
+            <audio id="audio-94">
+                <source src="russian_audio/phrase_94.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
     </div>
+    
+    <script>
+        // Add event listeners for play and loop buttons
+        document.querySelectorAll('.play-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const index = this.getAttribute('data-index');
+                const audio = document.getElementById(`audio-${index}`);
+                
+                if (audio.paused) {
+                    // Stop all other audio first
+                    document.querySelectorAll('audio').forEach(a => {
+                        if (!a.paused) {
+                            a.pause();
+                            a.currentTime = 0;
+                            const playButton = document.querySelector(`.play-button[data-index="${a.id.split('-')[1]}"]`);
+                            playButton.innerHTML = '▶';
+                        }
+                    });
+                    
+                    audio.play();
+                    this.innerHTML = '⏸';
+                } else {
+                    audio.pause();
+                    audio.currentTime = 0;
+                    this.innerHTML = '▶';
+                }
+            });
+        });
 
-    <div class="phrase-container">
-        <div class="phrase-number">#3</div>
-        <div class="russian">Доброе утро</div>
-        <div class="translation">Good morning</div>
-        <audio controls>
-            <source src="russian_audio/phrase_3.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
+        document.querySelectorAll('.loop-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const index = this.getAttribute('data-index');
+                const audio = document.getElementById(`audio-${index}`);
+                
+                if (this.classList.contains('loop-active')) {
+                    // Deactivate loop
+                    this.classList.remove('loop-active');
+                    audio.loop = false;
+                    if (!audio.paused) {
+                        audio.pause();
+                        audio.currentTime = 0;
+                        const playButton = document.querySelector(`.play-button[data-index="${index}"]`);
+                        playButton.innerHTML = '▶';
+                    }
+                } else {
+                    // Activate loop
+                    this.classList.add('loop-active');
+                    audio.loop = true;
+                    if (audio.paused) {
+                        audio.play();
+                        const playButton = document.querySelector(`.play-button[data-index="${index}"]`);
+                        playButton.innerHTML = '⏸';
+                    }
+                }
+            });
+        });
 
-    <div class="phrase-container">
-        <div class="phrase-number">#4</div>
-        <div class="russian">Добрый день</div>
-        <div class="translation">Good afternoon</div>
-        <audio controls>
-            <source src="russian_audio/phrase_4.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
+        // Handle audio ending event
+        document.querySelectorAll('audio').forEach(audio => {
+            audio.addEventListener('ended', function() {
+                if (!this.loop) {
+                    const index = this.id.split('-')[1];
+                    const playButton = document.querySelector(`.play-button[data-index="${index}"]`);
+                    playButton.innerHTML = '▶';
+                }
+            });
+        });
 
-    <div class="phrase-container">
-        <div class="phrase-number">#5</div>
-        <div class="russian">Добрый вечер</div>
-        <div class="translation">Good evening</div>
-        <audio controls>
-            <source src="russian_audio/phrase_5.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
+        // Topic filtering functionality
+        document.querySelectorAll('.topic-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const topic = this.getAttribute('data-topic');
+                
+                // Update active button state
+                document.querySelectorAll('.topic-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Filter phrases
+                document.querySelectorAll('.phrase-container').forEach(phrase => {
+                    if (phrase.getAttribute('data-topic') === topic) {
+                        phrase.style.display = 'flex';
+                    } else {
+                        phrase.style.display = 'none';
+                    }
+                });
+            });
+        });
 
-    <div class="phrase-container">
-        <div class="phrase-number">#6</div>
-        <div class="russian">Пока!</div>
-        <div class="translation">Bye!</div>
-        <audio controls>
-            <source src="russian_audio/phrase_6.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#7</div>
-        <div class="russian">До свидания</div>
-        <div class="translation">Goodbye (formal)</div>
-        <audio controls>
-            <source src="russian_audio/phrase_7.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#8</div>
-        <div class="russian">Как тебя зовут?</div>
-        <div class="translation">What's your name?</div>
-        <audio controls>
-            <source src="russian_audio/phrase_8.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#9</div>
-        <div class="russian">Меня зовут Станислав</div>
-        <div class="translation">My name is Stanislav</div>
-        <audio controls>
-            <source src="russian_audio/phrase_9.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#10</div>
-        <div class="russian">Очень приятно</div>
-        <div class="translation">Nice to meet you</div>
-        <audio controls>
-            <source src="russian_audio/phrase_10.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#11</div>
-        <div class="russian">Как дела?</div>
-        <div class="translation">How are you?</div>
-        <audio controls>
-            <source src="russian_audio/phrase_11.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#12</div>
-        <div class="russian">Хорошо</div>
-        <div class="translation">Good</div>
-        <audio controls>
-            <source src="russian_audio/phrase_12.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#13</div>
-        <div class="russian">Так себе</div>
-        <div class="translation">So-so</div>
-        <audio controls>
-            <source src="russian_audio/phrase_13.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#14</div>
-        <div class="russian">Плохо</div>
-        <div class="translation">Bad</div>
-        <audio controls>
-            <source src="russian_audio/phrase_14.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#15</div>
-        <div class="russian">Ты говоришь по-русски?</div>
-        <div class="translation">Do you speak Russian?</div>
-        <audio controls>
-            <source src="russian_audio/phrase_15.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#16</div>
-        <div class="russian">Да, немного</div>
-        <div class="translation">Yes, a little</div>
-        <audio controls>
-            <source src="russian_audio/phrase_16.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#17</div>
-        <div class="russian">Где туалет?</div>
-        <div class="translation">Where is the bathroom?</div>
-        <audio controls>
-            <source src="russian_audio/phrase_17.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#18</div>
-        <div class="russian">Сколько это стоит?</div>
-        <div class="translation">How much does this cost?</div>
-        <audio controls>
-            <source src="russian_audio/phrase_18.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#19</div>
-        <div class="russian">Я не понимаю</div>
-        <div class="translation">I don't understand</div>
-        <audio controls>
-            <source src="russian_audio/phrase_19.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#20</div>
-        <div class="russian">Пожалуйста</div>
-        <div class="translation">Please</div>
-        <audio controls>
-            <source src="russian_audio/phrase_20.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#21</div>
-        <div class="russian">Спасибо</div>
-        <div class="translation">Thank you</div>
-        <audio controls>
-            <source src="russian_audio/phrase_21.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#22</div>
-        <div class="russian">Извините</div>
-        <div class="translation">Excuse me/Sorry</div>
-        <audio controls>
-            <source src="russian_audio/phrase_22.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#23</div>
-        <div class="russian">Что будете заказывать?</div>
-        <div class="translation">What would you like to order?</div>
-        <audio controls>
-            <source src="russian_audio/phrase_23.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#24</div>
-        <div class="russian">Я хочу кофе, пожалуйста</div>
-        <div class="translation">I would like coffee, please</div>
-        <audio controls>
-            <source src="russian_audio/phrase_24.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#25</div>
-        <div class="russian">С вас 200 рублей</div>
-        <div class="translation">That will be 200 rubles</div>
-        <audio controls>
-            <source src="russian_audio/phrase_25.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#26</div>
-        <div class="russian">Сколько это в евро?</div>
-        <div class="translation">How much is that in euros?</div>
-        <audio controls>
-            <source src="russian_audio/phrase_26.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#27</div>
-        <div class="russian">Вот, пожалуйста</div>
-        <div class="translation">Here you go</div>
-        <audio controls>
-            <source src="russian_audio/phrase_27.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#28</div>
-        <div class="russian">Я учу русский язык</div>
-        <div class="translation">I am learning Russian</div>
-        <audio controls>
-            <source src="russian_audio/phrase_28.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#29</div>
-        <div class="russian">Мне нравится русская культура</div>
-        <div class="translation">I like Russian culture</div>
-        <audio controls>
-            <source src="russian_audio/phrase_29.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#30</div>
-        <div class="russian">Я хочу говорить по-русски</div>
-        <div class="translation">I want to speak Russian</div>
-        <audio controls>
-            <source src="russian_audio/phrase_30.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#31</div>
-        <div class="russian">Русский язык сложный</div>
-        <div class="translation">Russian language is difficult</div>
-        <audio controls>
-            <source src="russian_audio/phrase_31.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#32</div>
-        <div class="russian">Но очень интересный</div>
-        <div class="translation">But very interesting</div>
-        <audio controls>
-            <source src="russian_audio/phrase_32.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#33</div>
-        <div class="russian">Чили</div>
-        <div class="translation">Chili</div>
-        <audio controls>
-            <source src="russian_audio/phrase_33.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#34</div>
-        <div class="russian">Перец</div>
-        <div class="translation">Pepper</div>
-        <audio controls>
-            <source src="russian_audio/phrase_34.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#35</div>
-        <div class="russian">Суп</div>
-        <div class="translation">Soup</div>
-        <audio controls>
-            <source src="russian_audio/phrase_35.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#36</div>
-        <div class="russian">Ресторан</div>
-        <div class="translation">Restaurant</div>
-        <audio controls>
-            <source src="russian_audio/phrase_36.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#37</div>
-        <div class="russian">Я голоден</div>
-        <div class="translation">I'm hungry</div>
-        <audio controls>
-            <source src="russian_audio/phrase_37.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#38</div>
-        <div class="russian">Очень вкусно</div>
-        <div class="translation">Very tasty</div>
-        <audio controls>
-            <source src="russian_audio/phrase_38.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#39</div>
-        <div class="russian">Я бы хотел борщ, пожалуйста.</div>
-        <div class="translation">I would like borscht, please.</div>
-        <audio controls>
-            <source src="russian_audio/phrase_39.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#40</div>
-        <div class="russian">Меню, пожалуйста.</div>
-        <div class="translation">The menu, please.</div>
-        <audio controls>
-            <source src="russian_audio/phrase_40.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#41</div>
-        <div class="russian">Что вы порекомендуете?</div>
-        <div class="translation">What would you recommend?</div>
-        <audio controls>
-            <source src="russian_audio/phrase_41.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#42</div>
-        <div class="russian">Можно мне…?</div>
-        <div class="translation">Can I have...?</div>
-        <audio controls>
-            <source src="russian_audio/phrase_42.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#43</div>
-        <div class="russian">Я возьму…</div>
-        <div class="translation">I'll take…</div>
-        <audio controls>
-            <source src="russian_audio/phrase_43.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#44</div>
-        <div class="russian">Счёт, пожалуйста.</div>
-        <div class="translation">The bill, please.</div>
-        <audio controls>
-            <source src="russian_audio/phrase_44.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#45</div>
-        <div class="russian">Где туалет?</div>
-        <div class="translation">Where is the toilet?</div>
-        <audio controls>
-            <source src="russian_audio/phrase_45.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#46</div>
-        <div class="russian">Это острое?</div>
-        <div class="translation">Is this spicy?</div>
-        <audio controls>
-            <source src="russian_audio/phrase_46.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#47</div>
-        <div class="russian">У вас есть вегетарианские блюда?</div>
-        <div class="translation">Do you have vegetarian dishes?</div>
-        <audio controls>
-            <source src="russian_audio/phrase_47.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#48</div>
-        <div class="russian">Мне нужна помощь.</div>
-        <div class="translation">I need help.</div>
-        <audio controls>
-            <source src="russian_audio/phrase_48.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#49</div>
-        <div class="russian">Пожалуйста</div>
-        <div class="translation">Please / You're welcome</div>
-        <audio controls>
-            <source src="russian_audio/phrase_49.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#50</div>
-        <div class="russian">Спасибо</div>
-        <div class="translation">Thank you</div>
-        <audio controls>
-            <source src="russian_audio/phrase_50.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <div class="phrase-container">
-        <div class="phrase-number">#51</div>
-        <div class="russian">Извините</div>
-        <div class="translation"></div>
-        <audio controls>
-            <source src="russian_audio/phrase_51.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
+        // Reset filter
+        document.getElementById('resetFilter').addEventListener('click', function() {
+            // Show all phrases
+            document.querySelectorAll('.phrase-container').forEach(phrase => {
+                phrase.style.display = 'flex';
+            });
+            
+            // Remove active state from topic buttons
+            document.querySelectorAll('.topic-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+        });
+    </script>
 </body>
 </html>
